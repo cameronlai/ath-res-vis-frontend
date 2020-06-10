@@ -1,3 +1,3 @@
 module.exports = {
-    publicPath: "/ath-res-vis-frontend",
-  };
+  publicPath: "/ath-res-vis-frontend",
+};
