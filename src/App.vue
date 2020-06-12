@@ -8,7 +8,6 @@
         <p class="mx-auto">Visualizing Athletics Results in Hong Kong Secondary School Competition</p>
       </b-row>
       <hr />
-
       <b-row>
         <b-col cols="2">
           <b-form-group label-cols="4" label="School">
@@ -30,13 +29,15 @@
             <b-form-select @change="changeName()" v-model="selectedName" :options="nameOptions"></b-form-select>
           </b-form-group>
         </b-col>
-        <b-col col="1">
+        <b-col cols="1">
           <b-button>Query</b-button>
         </b-col>
       </b-row>
       <hr />
       <b-row>
-        <b-col>chart</b-col>
+        <b-col>
+          <chart :chartData="chartdata" :options="chartOptions"></chart>
+        </b-col>
         <b-col>
           <b-table striped hover :items="items" :fields="fields"></b-table>
         </b-col>
@@ -60,11 +61,42 @@
 
 <script>
 import json from "./assets/data.json";
+import Chart from "./components/Chart.vue";
 
 export default {
   name: "App",
+  components: {
+    Chart
+  },
   data: function() {
     return {
+      chartOptions: {
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                display: true
+              },
+              gridLines: {
+                display: true
+              }
+            }
+          ],
+          xAxes: [
+            {
+              gridLines: {
+                display: true
+              }
+            }
+          ]
+        },
+        legend: {
+          display: true
+        },
+        responsive: true,
+        maintainAspectRatio: false
+      },
+      chartData: {},
       fields: [
         {
           key: "0",
@@ -89,24 +121,20 @@ export default {
         {
           key: "5",
           label: "Date"
-        },
-        {
-          key: "6",
-          label: "IsTrack"
         }
       ],
       items: [],
-      sexOptions: ["M", "F"],
-      schoolOptions: ["M", "F"],
-      eventOptions: ["M", "F"],
-      nameOptions: ["M", "F"],
+      sexOptions: [],
+      schoolOptions: [],
+      eventOptions: [],
+      nameOptions: [],
       selectedSex: null,
       selectedSchool: null,
       selectedEvent: null,
       selectedName: null
     };
   },
-  mounted: function() {
+  created: function() {
     this.schoolOptions = [...new Set(json.map(item => item["1"]))].sort();
     console.log(this.schoolOptions);
     this.selectedSchool = this.schoolOptions[0];
@@ -148,6 +176,27 @@ export default {
         return ret;
       });
       console.log(this.items);
+      this.updateChart();
+    },
+    updateChart: function() {
+      console.log("Update Chart");
+      const dates = this.items.map(item => item["5"]);
+      const results = this.items.map(item => item["4"]);
+
+      console.log(dates);
+      console.log(results);
+
+      this.chartdata = {
+        labels: dates,
+        datasets: [
+          {
+            label: this.items[0]["0"], // Name,
+            backgroundColor: "#ADD8E6",
+            data: results
+          }
+        ]
+      };
+      console.log(this.chartdata);
     }
   }
 };
