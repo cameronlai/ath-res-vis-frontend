@@ -140,9 +140,9 @@ export default {
   },
   created: function() {
     this.schoolOptions = [...new Set(json.map(item => item["1"]))].sort();
-    console.log(this.schoolOptions);
+    //console.log(this.schoolOptions);
     this.selectedSchool = this.schoolOptions[0];
-    console.log(this.selectedSchool);
+    //console.log(this.selectedSchool);
     this.changeSchool();
     this.getNames();
   },
@@ -153,9 +153,9 @@ export default {
         return ret;
       });
       this.sexOptions = [...new Set(items.map(item => item["3"]))].reverse();
-      console.log(this.sexOptions);
+      //console.log(this.sexOptions);
       this.selectedSex = this.sexOptions[0];
-      console.log(this.selectedSex);
+      //console.log(this.selectedSex);
       this.changeSex();    
     },
     changeSex: function() {
@@ -165,9 +165,9 @@ export default {
         return ret;
       });
       this.eventOptions = [...new Set(items.map(item => item["2"]))].sort();
-      console.log(this.eventOptions);
+      //console.log(this.eventOptions);
       this.selectedEvent = this.eventOptions[0];
-      console.log(this.selectedEvent);
+      //console.log(this.selectedEvent);
     },    
     getNames: function() {
       const items = json.filter(item => {
@@ -190,16 +190,16 @@ export default {
           item["3"] == this.selectedSex;
         return ret;
       });
-      console.log(this.items);
+      //console.log(this.items);
       this.updateChart();
     },
     updateChart: function() {
-      console.log("Update Chart");
+      //console.log("Update Chart");
       const dates = this.items.map(item => item["5"]);
       const results = this.items.map(item => item["4"]);
 
-      console.log(dates);
-      console.log(results);
+      //console.log(dates);
+      //console.log(results);
 
       this.chartdata = {
         labels: dates,
@@ -211,7 +211,7 @@ export default {
           }
         ]
       };
-      console.log(this.chartdata);
+      //console.log(this.chartdata);
     }
   }
 };
