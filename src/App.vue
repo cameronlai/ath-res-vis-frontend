@@ -11,12 +11,16 @@
       <b-row>
         <b-col cols="2">
           <b-form-group label-cols="4" label="School">
-            <b-form-select @change="getNames()" v-model="selectedSchool" :options="schoolOptions"></b-form-select>
+            <b-form-select
+              @change="changeSchool();getNames()"
+              v-model="selectedSchool"
+              :options="schoolOptions"
+            ></b-form-select>
           </b-form-group>
         </b-col>
         <b-col cols="2">
           <b-form-group label-cols="4" label="Sex">
-            <b-form-select @change="getNames()" v-model="selectedSex" :options="sexOptions"></b-form-select>
+            <b-form-select @change="changeSex();getNames()" v-model="selectedSex" :options="sexOptions"></b-form-select>
           </b-form-group>
         </b-col>
         <b-col cols="3">
@@ -139,19 +143,33 @@ export default {
     console.log(this.schoolOptions);
     this.selectedSchool = this.schoolOptions[0];
     console.log(this.selectedSchool);
-    this.sexOptions = [...new Set(json.map(item => item["3"]))].reverse();
-    console.log(this.sexOptions);
-    this.selectedSex = this.sexOptions[0];
-    console.log(this.selectedSex);
-    this.eventOptions = [...new Set(json.map(item => item["2"]))].sort();
-    console.log(this.eventOptions);
-    this.selectedEvent = this.eventOptions[0];
-    console.log(this.selectedEvent);
+    this.changeSchool();
     this.getNames();
   },
   methods: {
+    changeSchool: function() {
+      let items = json.filter(item => {
+        const ret = item["1"] == this.selectedSchool;
+        return ret;
+      });
+      this.sexOptions = [...new Set(items.map(item => item["3"]))].reverse();
+      console.log(this.sexOptions);
+      this.selectedSex = this.sexOptions[0];
+      console.log(this.selectedSex);
+      this.changeSex();    
+    },
+    changeSex: function() {
+      let items = json.filter(item => {
+        const ret =
+          item["3"] == this.selectedSex && item["1"] == this.selectedSchool;
+        return ret;
+      });
+      this.eventOptions = [...new Set(items.map(item => item["2"]))].sort();
+      console.log(this.eventOptions);
+      this.selectedEvent = this.eventOptions[0];
+      console.log(this.selectedEvent);
+    },    
     getNames: function() {
-      console.log("getNames");
       const items = json.filter(item => {
         const ret =
           item["1"] == this.selectedSchool &&
@@ -160,13 +178,10 @@ export default {
         return ret;
       });
       this.nameOptions = [...new Set(items.map(item => item["0"]))].sort();
-      console.log(this.nameOptions);
       this.selectedName = this.nameOptions[0];
-      console.log(this.selectedName);
       this.changeName();
     },
     changeName: function() {
-      console.log("changeName");
       this.items = json.filter(item => {
         const ret =
           item["0"] == this.selectedName &&
